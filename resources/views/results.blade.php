@@ -42,19 +42,9 @@
                             @endif
                         </li>
     
-                        @if(!is_null($questionResponse->transcription))
                         <li class="list-group-item">Transcribed Answer: {{ $questionResponse->transcription }}</li>
-                       @else
-                        <li class="list-group-item">
-                            <a class="btn btn-xs"  href="{{ route('upload.audio',[
-                            'questionId' => $questionResponse->question->id,
-                            'callSid' => $response->first()->session_sid,
-                            'RecordingSid' => $response->first()->recording_sid,
-                            'url' => $questionResponse->response]) }}"> 
-                         <span class="badge badge-pill badge-soft-primary font-size-11">Transcribe</span>
-                            </a>
-                        </li>
-                        @endif
+                      
+                    
 
                     </ol>
                     <br>

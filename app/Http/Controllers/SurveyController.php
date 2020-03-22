@@ -8,11 +8,53 @@ use App\Http\Controllers\Controller;
 use App\Survey;
 use App\QuestionResponse;
 use Twilio\TwiML\VoiceResponse;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\BaseController as BaseController;
 
 
-class SurveyController extends Controller
+class SurveyController extends BaseController
 {
 
+    public function createSurvey(Request $request)  
+    {
+        $input = $request->all();
+
+
+        $validator = Validator::make($input, [
+            'title' => 'required',
+        ]);
+
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+
+        $survey = Survey::create($input);
+
+
+        return $this->sendResponse($survey->toArray(), 'Survey created successfully.');
+    
+    }
+
+    public function updateSurvey(Request $request, $id)
+    {
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'title' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        
+        $survey = Survey::find($id);
+        $survey->title = $request->title;
+        $survey->save();
+        return $this->sendResponse($survey->toArray(), 'Survey updated successfully.');
+
+    }
     public function connectVoice(Request $request)
     {
         $response = new VoiceResponse();
@@ -22,13 +64,17 @@ class SurveyController extends Controller
     
 
 
+
     public function showResults($surveyId)
     {
+        
         $survey = Survey::find($surveyId);
-        $responsesByCall = QuestionResponse::responsesForSurveyByCall($surveyId)
+        $questionResponse = QuestionResponse::where('transcribe_status','processed');
+        $responsesByCall = $questionResponse->responsesForSurveyByCall($surveyId)
                          ->get()
                          ->groupBy('session_sid')
                          ->values();
+        
 
         return response()->view(
             'results',

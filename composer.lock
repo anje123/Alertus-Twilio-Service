@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "56e54b10b910031088115259bc16edf9",
+    "content-hash": "8d570191da24a6c0d4565af41fb2911a",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -3253,6 +3253,70 @@
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
             "time": "2020-02-07T20:06:44+00:00"
+        },
+        {
+            "name": "symfony/psr-http-message-bridge",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/psr-http-message-bridge.git",
+                "reference": "ce709cd9c90872c08c2427b45739d5f3c781ab4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/ce709cd9c90872c08c2427b45739d5f3c781ab4f",
+                "reference": "ce709cd9c90872c08c2427b45739d5f3c781ab4f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "psr/http-message": "^1.0",
+                "symfony/http-foundation": "^4.4 || ^5.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.1",
+                "symfony/phpunit-bridge": "^4.4 || ^5.0"
+            },
+            "suggest": {
+                "nyholm/psr7": "For a super lightweight PSR-7/17 implementation"
+            },
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bridge\\PsrHttpMessage\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "PSR HTTP message bridge",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2020-01-02T08:07:11+00:00"
         },
         {
             "name": "symfony/routing",

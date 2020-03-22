@@ -39,14 +39,16 @@ class QuestionResponseController extends Controller
 
     public function storeVoice($surveyId, $questionId, Request $request)
     {
-        Log::info($request);
+        dd(QuestionResponse::find(1));
+
         $question = Question::find($questionId);
         $newResponse = $question->responses()->create(
             ['response' => $this->_responseFromVoiceRequest($question, $request),
              'phone_no' => $request->Caller,
              'recording_sid' => $request->RecordingSid,
-             'storage_completed' => false,
-             'transcribe_completed' => false,
+             'country' => $request->CallerCountry,
+             'storage_completed' => "not_processed",
+             'transcribe_completed' => "not_processed",
              'type' => 'voice',
              'session_sid' => $request->input('CallSid')]
        );

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionResponse extends Model
 {
-    protected $fillable = ['type', 'response', 'session_sid','recording_sid','phone_no','storage_completed','transcribe_completed'];
+    protected $fillable = ['type', 'response', 'session_sid','recording_sid','phone_no','storage_status','transcribe_status',"country"];
 
 
     public function question()
@@ -17,6 +17,11 @@ class QuestionResponse extends Model
     public function responseTranscription()
     {
         return $this->hasOne('App\ResponseTranscription');
+    }
+
+    public function responseTranscriptionInfo()
+    {
+        return $this->hasOne('App\TranscribeInfo');
     }
 
     public function scopeResponsesForSurveyByCall($query, $surveyId)

@@ -8,9 +8,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Question;
 use Twilio\TwiML\VoiceResponse;
+use App\Http\Controllers\BaseController as BaseController;
+use Illuminate\Support\Facades\Validator;
 
 
-class QuestionController extends Controller
+
+class QuestionController extends BaseController
 {
 
     public function viewQuestions($surveyId)
@@ -19,52 +22,47 @@ class QuestionController extends Controller
 
     }
 
-    public function createQuestion()
-    {
-        return view('questions.create');
-    }
 
-    public function editQuestion($id)
+    public function createQuestion(Request $request)
     {
-        return view('questions.edit')->with('question', Question::find($id));
-    }
+        $input = $request->all();
 
-    public function storeQuestion(Request $request)
-    {
-       // dd($request->all());
-        $this->validate($request,[
+        $validator = Validator::make($input, [
             'body' => 'required',
             'kind' => 'required',
             'survey_id' => 'required'
         ]);
-       
-        Question::create([
-            'body' => $request->body,
-            'kind' => $request->kind,
-            'survey_id' => $request->survey_id
-        ]);
 
-        return redirect()->route('questions',['surveyId' => $request->survey_id]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
 
+        $question = Question::create($input);
+
+        return $this->sendResponse($question->toArray(), 'Question created successfully.');
 
     }
 
-    public function updateQuestion(Request $request, $id)
+    public function updateSurvey(Request $request, $id)
     {
-       // dd($request->all());
-        $this->validate($request,[
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
             'body' => 'required',
-            'kind' => 'required'
+            'kind' => 'required',
+            'survey_id' => 'required'
         ]);
-       
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        
         $question = Question::find($id);
         $question->body = $request->body;
         $question->kind = $request->kind;
         $question->survey_id = $request->survey_id;
         $question->save();
-
-
-        return redirect()->route('questions', ['surveyId' => $request->survey_id]);
+        return $this->sendResponse($question->toArray(), 'Question updated successfully.');
 
     }
     

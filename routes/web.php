@@ -14,7 +14,6 @@ use App\Question;
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/audio/transcribe', 'QuestionResponseController@convert')->name('upload.audio');
 
 Route::get(
     '/survey/{survey}/results',
