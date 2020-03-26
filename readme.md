@@ -35,10 +35,10 @@ HOW TO SETUP:
     * PATCH /api/question/activate/{surveyId}
 * All questions in (or belonging to) this survey:
     * GET /api/survey/{surveyId}/questions
-* Deactivate a question:
-    * DELETE /api/questions/deactivated
-* Activate a question:
-    * PATCH /api/questions/activated
+* To get all Deactivated Questions:
+    * GET /api/questions/deactivated
+* To get all Activated Questions:
+    * GET /api/questions/activated
 ## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
