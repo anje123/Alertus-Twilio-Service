@@ -33,7 +33,7 @@ class QuestionController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validations Error.', $validator->errors());       
         }
 
         $question = Question::create($input);
