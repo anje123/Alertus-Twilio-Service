@@ -66,7 +66,7 @@ Route::get('/questions/activated', ['uses' => 'API\QuestionController@getActivat
 
 
 Route::get('/responses/{last_object_id}', ['uses' => 'API\QuestionResponseController@getResponses']);
-Route::get('/responses/{surveyId}/questions/{questionId}', ['uses' => 'API\QuestionResponseController@getResponsesBySurveyAndQuestion']);
+Route::get('/questions/responses/{questionId}', ['uses' => 'API\QuestionResponseController@getResponsesByQuestionId']);
 
 Route::post('/delete_recording_from_twilio', ['uses' => 'API\QuestionResponseController@deleteRecordFromTwilio']);
 

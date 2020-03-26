@@ -30,12 +30,6 @@ class QuestionResponseController extends Controller
         $this->bucket_name = env('GOOGLE_CLOUD_STORAGE_BUCKET', 'femmy2');
     }
 
-    /**
-     * Initializes the SpeechClient
-     * @return object \SpeechClient
-     */
-  
-
     public function storeVoice($surveyId, $questionId, Request $request)
     {
         $question = Question::find($questionId);
@@ -112,15 +106,10 @@ class QuestionResponseController extends Controller
     }
 
 
-
-    /**
-     * Rename the file to FLAC format
-     * @param  string  $name unique filename
-     * @return striing $name
-     */
     public static function getFilename($name)
     {
         return $name.".flac";
     } 
+
 
 }

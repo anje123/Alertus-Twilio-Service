@@ -22,7 +22,7 @@ class QuestionResponseController extends BaseController
        return response()->json($responses, 200);
     }
 
-    public function deleteRecordFromTwilio(Request $request){
+    public function deleteRecordFromTwilio($surveyId, $questionId){
         Log::info($request);
 
             foreach ($request->all() as $data) {
@@ -32,5 +32,12 @@ class QuestionResponseController extends BaseController
                 $twilio = new Client($sid, $token);
                 $twilio->recordings($data['Recording_Sid'])->delete();
             } 
+    }
+
+
+    public function getResponsesByQuestionId($questionId)
+    {
+       $responses = QuestionResponse::where('question_id',$questionId)->get();
+       return response()->json($responses, 200);
     }
 }
