@@ -61,9 +61,8 @@ Route::post('/question/update/{id}',[ 'uses' => 'API\QuestionController@updateQu
 Route::delete('/question/deactivate/{id}',[ 'uses' => 'API\QuestionController@deactivateQuestion']);
 Route::patch('/question/activate/{id}',[ 'uses' => 'API\QuestionController@activateQuestion']);
 Route::get('/survey/{surveyId}/questions', ['uses' => 'API\QuestionController@getQuestionsBySurveyId']);
-Route::get('/questions/deleted', ['uses' => 'API\QuestionController@getDeactivatedQuestions']);
-Route::get('/questions/deactivated', ['uses' => 'API\QuestionController@getDeactivatedQuestions']);
-Route::get('/questions/activated', ['uses' => 'API\QuestionController@getActivatedQuestions']);
+Route::delete('/questions/deactivated', ['uses' => 'API\QuestionController@getDeactivatedQuestions']);
+Route::patch('/questions/activated', ['uses' => 'API\QuestionController@getActivatedQuestions']);
 
 
 Route::get('/responses/{last_object_id}', ['uses' => 'API\QuestionResponseController@getResponses']);
