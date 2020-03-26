@@ -101,4 +101,5 @@ class QuestionController extends BaseController
         $questions = Question::onlyTrashed()->get();
         return response()->json($questions, 200);
     }
+
 }
