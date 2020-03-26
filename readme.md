@@ -39,6 +39,8 @@ HOW TO SETUP:
     * GET /api/questions/deactivated
 * To get all Activated Questions:
     * GET /api/questions/activated
+* To get all Responses For a Particular question:
+    * GET /questions/responses/{questionId}
 ## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
