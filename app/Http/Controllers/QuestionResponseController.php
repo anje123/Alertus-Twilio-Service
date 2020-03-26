@@ -36,11 +36,8 @@ class QuestionResponseController extends Controller
      */
   
 
-
     public function storeVoice($surveyId, $questionId, Request $request)
     {
-        dd(QuestionResponse::find(1));
-
         $question = Question::find($questionId);
         $newResponse = $question->responses()->create(
             ['response' => $this->_responseFromVoiceRequest($question, $request),
@@ -67,7 +64,7 @@ class QuestionResponseController extends Controller
     private function _responseFromVoiceRequest($question, $request)
     {
         if ($question->kind === 'free-answer') {
-            return $request->input('RecordingUrl');
+            return $request->input('RecordingUrl').'.mp3';
         } else {
             return $request->input('Digits');
         }

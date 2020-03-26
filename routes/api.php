@@ -44,18 +44,30 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // })->name('upload.audio');
 
-Route::post('/survey/create', [
-    'uses' => 'SurveyController@createSurvey'
-]);
+Route::post('/survey/create', ['uses' => 'API\SurveyController@createSurvey']);
+Route::get('/surveys', ['uses' => 'API\SurveyController@getSurveys']);
 
 Route::post('/survey/update/{id}', [
-    'uses' => 'SurveyController@updateSurvey'
+    'uses' => 'API\SurveyController@updateSurvey'
 ]);
+Route::delete('/survey/deactivate/{id}',[ 'uses' => 'API\SurveyController@deactivateSurvey']);
+Route::patch('/survey/activate/{id}',[ 'uses' => 'API\SurveyController@activateSurvey']);
 
 
-Route::post('/question/create',[ 'uses' => 'QuestionController@createQuestion']);
 
-Route::post('/question/update/{id}',[ 'uses' => 'QuestionController@updateQuestion']);
+
+Route::post('/question/create',[ 'uses' => 'API\QuestionController@createQuestion']);
+Route::post('/question/update/{id}',[ 'uses' => 'API\QuestionController@updateQuestion']);
+Route::delete('/question/deactivate/{id}',[ 'uses' => 'API\QuestionController@deactivateQuestion']);
+Route::patch('/question/activate/{id}',[ 'uses' => 'API\QuestionController@activateQuestion']);
+Route::get('/survey/{surveyId}/questions', ['uses' => 'API\QuestionController@getQuestionsBySurveyId']);
+Route::get('/questions/deleted', ['uses' => 'API\QuestionController@getDeactivatedQuestions']);
+Route::get('/questions/deactivated', ['uses' => 'API\QuestionController@getDeactivatedQuestions']);
+Route::get('/questions/activated', ['uses' => 'API\QuestionController@getActivatedQuestions']);
+
+
+Route::get('/responses/{last_object_id}', ['uses' => 'API\QuestionResponseController@getResponses']);
+Route::post('/delete_recording_from_twilio', ['uses' => 'API\QuestionResponseController@deleteRecordFromTwilio']);
 
 
 

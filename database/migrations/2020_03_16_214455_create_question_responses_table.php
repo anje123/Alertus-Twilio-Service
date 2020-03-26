@@ -13,10 +13,24 @@ class CreateQuestionResponsesTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_responses', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'question_responses', function ($table) {
+                $table->increments('id');
+                $table->text('response');
+                $table->enum('type', ['voice', 'sms']);
+                $table->string('session_sid');
+                $table->string('recording_sid');
+                $table->string("country");
+                $table->string('storage_status')->default("not_processed");
+                $table->string('transcribe_status')->default("not_processed");
+                $table->string('phone_no');
+                $table->integer('question_id')->unsigned(); 
+                $table->timestamps();
+                $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
+
+
+            }
+        );
     }
 
     /**

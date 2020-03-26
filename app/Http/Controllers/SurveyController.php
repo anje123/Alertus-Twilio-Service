@@ -9,10 +9,9 @@ use App\Survey;
 use App\QuestionResponse;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\BaseController as BaseController;
 
 
-class SurveyController extends BaseController
+class SurveyController extends Controller
 {
 
     public function createSurvey(Request $request)  
@@ -37,24 +36,7 @@ class SurveyController extends BaseController
     
     }
 
-    public function updateSurvey(Request $request, $id)
-    {
-        $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'title' => 'required'
-        ]);
-
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-        
-        $survey = Survey::find($id);
-        $survey->title = $request->title;
-        $survey->save();
-        return $this->sendResponse($survey->toArray(), 'Survey updated successfully.');
-
-    }
     public function connectVoice(Request $request)
     {
         $response = new VoiceResponse();

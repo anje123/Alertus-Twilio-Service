@@ -58,7 +58,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/questions/{surveyId}', 'QuestionController@viewQuestions')->name('questions');
 Route::get('/create_question',[ 'uses' => 'QuestionController@createQuestion']);
-Route::get('/create_question',[ 'uses' => 'QuestionController@createQuestion']);
 Route::get('/edit_question/{id}',[ 'uses' => 'QuestionController@editQuestion'])->name('question.edit');
 Route::post('/store_question',[ 'uses' => 'QuestionController@storeQuestion'])->name('question.store');
 
