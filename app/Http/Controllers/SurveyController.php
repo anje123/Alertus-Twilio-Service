@@ -14,28 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class SurveyController extends Controller
 {
 
-    public function createSurvey(Request $request)  
-    {
-        $input = $request->all();
-
-
-        $validator = Validator::make($input, [
-            'title' => 'required',
-        ]);
-
-
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-
-
-        $survey = Survey::create($input);
-
-
-        return $this->sendResponse($survey->toArray(), 'Survey created successfully.');
-    
-    }
-
 
     public function connectVoice(Request $request)
     {
