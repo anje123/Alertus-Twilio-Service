@@ -14,9 +14,8 @@ use Cookie;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
-
-
-
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 
 class QuestionResponseController extends Controller
@@ -30,17 +29,50 @@ class QuestionResponseController extends Controller
         $this->bucket_name = env('GOOGLE_CLOUD_STORAGE_BUCKET', 'femmy2');
     }
 
+    public function sendtoEndpoint($request)
+    {
+        $connection = new AMQPStreamConnection('localhost', 5672, 
+        'guest', 'guest');
+        $channel = $connection->channel();
+
+        $channel->queue_declare('audio_queue',  //$queue - Either sets the queue or creates it if not exist
+                        false,          //$passive - Do not modify the servers state
+                        true,          //$durable - Data will persist if crash or restart occurs
+                        false,         //$exclusive - Only one connection will usee, and deleted when closed
+                        false          //$auto_delete - Queue is deleted when consumer is no longer subscribes
+         );
+
+
+        $data = $request;
+
+        $msg = new AMQPMessage(json_encode($data), array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
+        $channel->basic_publish($msg, '', 'audio_queue');
+        echo "Sent Audio To Server!'\n";
+
+        $channel->close();
+        $connection->close();
+    }
+
+
+    public function teststoreVoice()
+    {
+        $response = QuestionResponse::take(2)->get();
+        $this->sendtoEndpoint($response);
+    }
+
+
     public function storeVoice($surveyId, $questionId, Request $request)
     {
+        Log::info($request);
         $question = Question::find($questionId);
         $newResponse = $question->responses()->create(
             ['response' => $this->_responseFromVoiceRequest($question, $request),
              'phone_no' => $request->Caller,
              'recording_sid' => $request->RecordingSid,
-             'country' => $request->CallerCountry,
-             'storage_completed' => "not_processed",
-             'transcribe_completed' => "not_processed",
+             'storage_completed' => false,
+             'transcribe_completed' => false,
              'type' => 'voice',
+             'country' => 'Nigeria',
              'session_sid' => $request->input('CallSid')]
        );
 

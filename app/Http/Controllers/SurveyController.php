@@ -24,24 +24,6 @@ class SurveyController extends Controller
     
 
 
-
-    public function showResults($surveyId)
-    {
-        
-        $survey = Survey::find($surveyId);
-        $questionResponse = QuestionResponse::where('transcribe_status','processed');
-        $responsesByCall = $questionResponse->responsesForSurveyByCall($surveyId)
-                         ->get()
-                         ->groupBy('session_sid')
-                         ->values();
-        
-
-        return response()->view(
-            'results',
-            ['survey' => $survey, 'responses' => $responsesByCall]
-        );
-    }
-
     public function showFirstSurveyResults()
     {
        // $firstSurvey = $this->_getFirstSurvey();
