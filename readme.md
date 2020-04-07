@@ -43,6 +43,8 @@ HOW TO SETUP:
     * GET /api/questions/responses/{questionId}
 * To delete audio from twilio db:
     * POST /api/delete_recording_from_twilio
+        field: Recording_Sid
+
 ## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
