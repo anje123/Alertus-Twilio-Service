@@ -5,6 +5,7 @@
 ALERT TWILIO IVR Survey System is used to create surveys Via Voice Calls, this is a sophisticated research method used for collecting data from a pre-defined group of respondents to gain information and insights on various topics of interest
 
 HOW TO SETUP:
+* git clone https://github.com/anje123/Alertus-Twilio-Service.git
 * https://www.twilio.com/, Create An Account With Twilio
 * Fill the Twilio Credentials on your env
 * php artisan migrate , to migrate tables
