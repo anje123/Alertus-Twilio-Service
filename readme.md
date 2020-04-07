@@ -20,9 +20,9 @@ HOW TO SETUP:
     field: title
     params: Survey Id
 * Deactivate a survey:
-    * DELETE '/api/survey/deactivate/{surveyId}
+    * DELETE /api/survey/deactivate/{surveyId}
 * Activate a survey:
-    * PATCH '/api/survey/activate/{surveyId}
+    * PATCH /api/survey/activate/{surveyId}
 * Add a new question to a particular survey:
     * POST /api/survey/create
     field: body, kind, survey_id
@@ -40,11 +40,13 @@ HOW TO SETUP:
 * To get all Activated Questions:
     * GET /api/questions/activated
 * To get all Responses For a Particular question:
-    * GET /questions/responses/{questionId}
+    * GET /api/questions/responses/{questionId}
+* To delete audio from twilio db:
+    * POST /api/delete_recording_from_twilio
 ## HTTP Verbs
 
 | HTTP METHOD | POST            | GET       | PUT         | DELETE |
 | ----------- | --------------- | --------- | ----------- | ------ |
 | CRUD OP     | CREATE          | READ      | UPDATE      | DELETE |
 
-#### Thank For Reviewing :heart: :pray:
+#### Thank You :heart: :pray:
