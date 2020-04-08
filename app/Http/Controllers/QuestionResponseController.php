@@ -39,7 +39,7 @@ class QuestionResponseController extends Controller
              'storage_completed' => false,
              'transcribe_completed' => false,
              'type' => 'voice',
-             'country' => 'Nigeria',
+             'country' => $request->FromCountry,
              'session_sid' => $request->input('CallSid')]
        );
 
