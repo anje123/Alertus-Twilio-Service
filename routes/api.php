@@ -40,7 +40,7 @@ Route::get('/questions/deactivated', ['uses' => 'API\QuestionController@getDeact
 Route::get('/questions/activated', ['uses' => 'API\QuestionController@getActivatedQuestions']);
 
 
-Route::get('/responses/{last_object_id}', ['uses' => 'API\QuestionResponseController@getResponses']);
+Route::get('/responses', ['uses' => 'API\QuestionResponseController@getResponses']);
 Route::get('/questions/responses/{questionId}', ['uses' => 'API\QuestionResponseController@getResponsesByQuestionId']);
 
 Route::post('/delete_recording_from_twilio', ['uses' => 'API\QuestionResponseController@deleteRecordFromTwilio']);

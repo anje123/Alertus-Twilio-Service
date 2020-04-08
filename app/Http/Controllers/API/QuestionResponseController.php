@@ -18,7 +18,7 @@ class QuestionResponseController extends BaseController
 
     public function getResponses($last_object_id)
     {
-       $responses = QuestionResponse::where('id','>',$last_object_id)->take(10)->get();
+       $responses = QuestionResponse::all();
        return response()->json($responses, 200);
     }
 
