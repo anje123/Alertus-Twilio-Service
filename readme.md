@@ -1,7 +1,7 @@
 # ALERT TWILIO IVR Survey System
 
 ## Introduction
-Modern IVRs with TWILIO IVR can do more than say “Press 1”, a truly modern IVR is easy to build, deploy, and iterate. The modern IVR helps customers find what they’re looking for faster, reducing operational costs and increasing customer loyalty.
+Modern IVR System built with TWILIO IVR can do more than say “Press 1”, a truly modern IVR is easy to build, deploy, and iterate. The modern IVR helps customers find what they’re looking for faster, reducing operational costs and increasing customer loyalty.
 check here for more info https://www.twilio.com/solutions/ivr
 ### Building IVR System With Twilio IVR is very easy to bulid, deploy and Iterate :+1::sparkling_heart:	
 
