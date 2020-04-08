@@ -27,7 +27,7 @@ HOW TO SETUP:
 2. Fill the Twilio Credentials on your env file
 3. Create a Voice Project On Twilio console https://www.twilio.com/console
 4. Purchase a number, twilio gives you a trial number
-4. Fill the webhook with your CallBack URL your-domain-name/voice/connect
+5. Fill the webhook with your CallBack URL your-domain-name/voice/connect
    use ngrok for local development testing https://ngrok.com/
 ```
 
