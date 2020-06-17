@@ -87,4 +87,4 @@ HOW TO SETUP:
 | ----------- | --------------- | --------- | ----------- | ------ |
 | CRUD OP     | CREATE          | READ      | UPDATE      | DELETE |
 
-#### Please Check My Github Account Pull Requests and Issues for my recent contributions to Ushahidi :heart: :pray:
+
