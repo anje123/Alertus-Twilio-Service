@@ -1,15 +1,25 @@
-# ALERT TWILIO IVR Survey System
+# ALERTUS IVR INTEGRATION SERVICE
 
 ## Introduction
-Modern IVR System built with TWILIO IVR can do more than say “Press 1”, a truly modern IVR is easy to build, deploy, and iterate. The modern IVR helps customers find what they’re looking for faster, reducing operational costs and increasing customer loyalty.
-check here for more info https://www.twilio.com/solutions/ivr
-### Building IVR System With Twilio IVR is very easy to bulid, deploy and Iterate :+1::sparkling_heart:	
+
+AlertUS is a robust and highly scalable Interactive Voice Response (IVR) System for crowdsourcing real-time reports during natural disasters and crises in Nigeria.
+
+## Other Microservices
+ 
+1. Transcription Service : https://github.com/anje123/alertus-transcription-service
+
+## Project Prototype:
+
+#####  Phone Call Demo:​ ​https://www.youtube.com/watch?v=_FCB_C4cOPk
+#####  Web View Demo: https://www.youtube.com/watch?v=onUL2L-JZ74
 
 ## Guidelines
 
-ALERT TWILIO IVR Survey System is used to create surveys Via Voice Calls, this is a sophisticated research method used for collecting real time report from a pre-defined group of respondents to gain information and insights on various topics of interest
+This plateform can also be used to create surveys Via Voice Calls, this is a sophisticated research method used for collecting real time report from a pre-defined group of respondents to gain information and insights on various topics of interest
 
-HOW TO SETUP:
+
+### HOW TO SETUP:
+
 ```
  git clone https://github.com/anje123/Alertus-Twilio-Service.git
 ```
@@ -87,4 +97,5 @@ HOW TO SETUP:
 | ----------- | --------------- | --------- | ----------- | ------ |
 | CRUD OP     | CREATE          | READ      | UPDATE      | DELETE |
 
+### Building IVR System With Twilio IVR is very easy to bulid, deploy and Iterate :+1::sparkling_heart:	
 
