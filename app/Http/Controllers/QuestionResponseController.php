@@ -23,14 +23,6 @@ class QuestionResponseController extends Controller
 {
 
 
-    public function __construct()
-    { 
-        $this->path = public_path('audio-contents/');
-        $this->apikey = config('cloudconvert.api_key');
-        $this->bucket_name = env('GOOGLE_CLOUD_STORAGE_BUCKET', 'femmy2');
-    }
-
-
     public function storeVoice($surveyId, $questionId, Request $request)
     {
         $question = Question::find($questionId);
