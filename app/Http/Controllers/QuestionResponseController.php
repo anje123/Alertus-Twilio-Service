@@ -14,6 +14,8 @@ use Cookie;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 
 

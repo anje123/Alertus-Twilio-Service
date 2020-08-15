@@ -8,7 +8,6 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Question;
 use Twilio\TwiML\VoiceResponse;
-use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
 
 
