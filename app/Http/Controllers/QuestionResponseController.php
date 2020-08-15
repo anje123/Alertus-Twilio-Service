@@ -43,6 +43,7 @@ class QuestionResponseController extends Controller
              'session_sid' => $request->input('CallSid')]
        );
 
+       sendAudioToTranscriptionService($request->all());
         $nextQuestion = $this->_questionAfter($question);
 
         if (is_null($nextQuestion)) {
@@ -110,5 +111,28 @@ class QuestionResponseController extends Controller
         return $name.".flac";
     } 
 
+    public function sendAudioToTranscriptionService($data)
+    {
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $channel = $connection->channel();
+
+        //Create the queue
+        $channel->queue_declare('transcribe_queue',   //$queue - Either sets the queue or creates it if not exist
+                                false,          //$passive - Do not modify the servers state
+                                true,           //$durable - Data will persist if crash or restart occurs
+                                false,          //$exclusive - Only one connection will use queue, and deleted when closed
+                                false           //$auto_delete - Queue is deleted when consumer is no longer subscribes
+                            );
+
+
+        //Create the message, set the delivery to be persistant for crashes and restarts
+        $msg = new AMQPMessage(json_encode($data), array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
+        $channel->basic_publish($msg, '', 'transcribe_queue');
+
+        echo "Sent Audio To Server!'\n";
+
+        $channel->close();
+        $connection->close();
+    }
 
 }
