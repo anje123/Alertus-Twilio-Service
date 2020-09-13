@@ -45,6 +45,7 @@ This plateform can also be used to create surveys Via Voice Calls, this is a sop
 4. Purchase a number, twilio gives you a trial number
 5. Fill the webhook with your CallBack URL your-domain-name/voice/connect
    use ngrok for local development testing https://ngrok.com/
+6. composer install
 ```
 
 ## RESTful URLs
