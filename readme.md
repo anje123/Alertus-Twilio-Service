@@ -50,6 +50,17 @@ This plateform can also be used to create surveys Via Voice Calls, this is a sop
 
 ## RESTful URLs
 ```
+* To register a user:
+    * POST /api/user/create
+
+  Authorization Bearer Token is needed to access the next endpoints,  register first !!
+
+ * To update a user info:
+    * PUT /api/user/update
+
+* To update or refresh a user auth Token:
+    * PUT /api/user/update
+
 * Add a new survey:
     * POST /api/survey/create
      field: title

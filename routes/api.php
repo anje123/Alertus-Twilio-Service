@@ -17,7 +17,9 @@ Route::post('/user/create',[ 'uses' => 'API\UserController@create']);
 
 Route::group(['middleware' => ['auth:api']], function () {
     
-    Route::post('/user/update',[ 'uses' => 'API\UserController@updateToken']);
+    Route::post('/user/update/token',[ 'uses' => 'API\UserController@updateToken']);
+    Route::post('/user/update',[ 'uses' => 'API\UserController@updateUser']);
+
 
     Route::post('/survey/create', ['uses' => 'API\SurveyController@createSurvey']);
     Route::get('/surveys', ['uses' => 'API\SurveyController@getSurveys']);
