@@ -17,7 +17,7 @@ AlertUS is a robust and highly scalable Interactive Voice Response (IVR) System 
 
 This plateform can also be used to create surveys Via Voice Calls, this is a sophisticated research method used for collecting real time report from a pre-defined group of respondents to gain information and insights on various topics of interest
 
-## Next Phase C4 OF ALERTUS ARCHITECTURE DIAGRAM
+## Next Phase ALERTUS APP - C4 ARCHITECTURE DIAGRAM
 
 #####  Context Diagram: https://drive.google.com/file/d/1MgXC67CIsBGUHQDRf8I6k5j6vX75exML/view?usp=sharing
 #####  Container Diagram: https://drive.google.com/file/d/17ukSFXTwOp1iNDgxpPzhJg-80fSYgkJC/view?usp=sharing
