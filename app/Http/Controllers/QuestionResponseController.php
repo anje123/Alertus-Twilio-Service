@@ -8,12 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Question;
 use App\Survey;
 use App\QuestionResponse;
-use App\ResponseTranscription;
 use Twilio\TwiML\VoiceResponse;
-use Cookie;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -22,7 +17,9 @@ use PhpAmqpLib\Message\AMQPMessage;
 class QuestionResponseController extends Controller
 {
 
-
+    /**
+     *  1. this function is responsible for storing voice responses on the database
+    */
     public function storeVoice($surveyId, $questionId, Request $request)
     {
         $question = Question::find($questionId);
@@ -37,7 +34,7 @@ class QuestionResponseController extends Controller
              'session_sid' => $request->input('CallSid')]
        );
 
-       sendAudioToTranscriptionService($request->all());
+       sendResponsesToTranscriptionService($request->all());
         $nextQuestion = $this->_questionAfter($question);
 
         if (is_null($nextQuestion)) {
@@ -49,63 +46,10 @@ class QuestionResponseController extends Controller
         }
     }
 
-    private function _responseFromVoiceRequest($question, $request)
-    {
-        if ($question->kind === 'free-answer') {
-            return $request->input('RecordingUrl').'.mp3';
-        } else {
-            return $request->input('Digits');
-        }
-    }
-
-    private function _questionAfter($question)
-    {
-        $survey = Survey::find($question->survey_id);
-        $allQuestions = $survey->questions()->orderBy('id', 'asc')->get();
-        $position = $allQuestions->search($question);
-        $nextQuestion = $allQuestions->get($position + 1);
-        return $nextQuestion;
-    }
-
-
-    private function _voiceMessageAfterLastQuestion()
-    {
-        $voiceResponse = new VoiceResponse();
-        $voiceResponse->say('That was the last question');
-        $voiceResponse->say('Thank you for participating in this survey');
-        $voiceResponse->say('Good-bye');
-        $voiceResponse->hangup();
-        return Response::make($voiceResponse, '200')->header('Content-Type', 'text/xml');
-
-    }
-
-
-
-    private function _redirectToQuestion($question, $route)
-    {
-        $questionUrl = route(
-            $route,
-            ['question' => $question->id, 'survey' => $question->survey->id]
-        );
-        $redirectResponse = new VoiceResponse();
-
-        $redirectResponse->redirect($questionUrl, ['method' => 'GET']);
-        return Response::make($redirectResponse, '200')->header('Content-Type', 'text/xml');
-
-    }
-
-    private function _responseWithXmlType($response)
-    {
-        return $response->header('Content-Type', 'application/xml');
-    }
-
-
-    public static function getFilename($name)
-    {
-        return $name.".flac";
-    } 
-
-    public function sendAudioToTranscriptionService($data)
+     /**
+     * 1.this function is responsible for sending responses to the advanced queueing system (RabbitMQ)
+    */
+    public function sendResponsesToTranscriptionService($data)
     {
         $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
         $channel = $connection->channel();
@@ -127,6 +71,69 @@ class QuestionResponseController extends Controller
 
         $channel->close();
         $connection->close();
+    }
+
+    /**
+     *  1. this function is responsible for selecting responses whether the user used voice response or digits response
+    */
+    private function _responseFromVoiceRequest($question, $request)
+    {
+        if ($question->kind === 'free-answer') {
+            return $request->input('RecordingUrl').'.mp3';
+        } else {
+            return $request->input('Digits');
+        }
+    }
+
+    /**
+     *  1. this function is responsible for selecting the next question after each question
+    */
+    private function _questionAfter($question)
+    {
+        $survey = Survey::find($question->survey_id);
+        $allQuestions = $survey->questions()->orderBy('id', 'asc')->get();
+        $position = $allQuestions->search($question);
+        $nextQuestion = $allQuestions->get($position + 1);
+        return $nextQuestion;
+    }
+
+
+    /**
+     *  1. this function is responsible for saying/speaking when the users are done with the survey, basically after the last question
+    */
+    private function _voiceMessageAfterLastQuestion()
+    {
+        $voiceResponse = new VoiceResponse();
+        $voiceResponse->say('That was the last question');
+        $voiceResponse->say('Thank you for participating in this survey');
+        $voiceResponse->say('Good-bye');
+        $voiceResponse->hangup();
+        return Response::make($voiceResponse, '200')->header('Content-Type', 'text/xml');
+
+    }
+
+
+    /**
+     *  1. when sending responses from one route to another on the IVR, twilio ivr only understand Content-Type: XML response
+    */
+    private function _responseWithXmlType($response)
+    {
+        return $response->header('Content-Type', 'application/xml');
+    }
+
+    /**
+     *  1.this function is responsible for redirecting route the the _questionAfter function
+    */
+    private function _redirectToQuestion($question, $route)
+    {
+        $questionUrl = route(
+            $route,
+            ['question' => $question->id, 'survey' => $question->survey->id]
+        );
+        $redirectResponse = new VoiceResponse();
+
+        $redirectResponse->redirect($questionUrl, ['method' => 'GET']);
+        return Response::make($redirectResponse, '200')->header('Content-Type', 'text/xml');
     }
 
 }

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\RedirectResponse;
-use App\Question;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -47,21 +45,3 @@ Route::get(
     '/survey/{survey}/question/{question}/response/voice',
     ['as' => 'response.store.voice', 'uses' => 'QuestionResponseController@storeVoice']
 );
-
-Route::post(
-    '/survey/{survey}/question/{question}/response/transcription',
-    ['as' => 'response.transcription.store', 'uses' => 'QuestionResponseController@storeTranscription']
-);
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/questions/{surveyId}', 'QuestionController@viewQuestions')->name('questions');
-Route::get('/create_question',[ 'uses' => 'QuestionController@createQuestion']);
-Route::get('/edit_question/{id}',[ 'uses' => 'QuestionController@editQuestion'])->name('question.edit');
-Route::post('/store_question',[ 'uses' => 'QuestionController@storeQuestion'])->name('question.store');
-
-Route::post('/question_update/{id}', [
-    'uses' => 'QuestionController@updateQuestion',
-    'as' => 'question.update'
-   ]);

@@ -11,7 +11,7 @@ use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Validator;
 
 
-class SurveyController extends BaseController
+class SurveyController extends Controller
 {
     public function getSurveys()
     {
