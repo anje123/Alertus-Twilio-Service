@@ -8,20 +8,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Question;
 use Twilio\TwiML\VoiceResponse;
-use Illuminate\Support\Facades\Validator;
 
 
 
 class QuestionController extends Controller
 {
 
-    public function showVoice($surveyId, $questionId)
-    {
-        $questionToAsk = Question::find($questionId);
-        return $this->_responseWithXmlType($this->_commandForVoice($questionToAsk));
-    }
-
-
+     /**
+      * 1. this function is responsible for saying/speaking questions of the selected survey
+      */
     private function _commandForVoice($question)
     {
         $voiceResponse = new VoiceResponse();
@@ -33,7 +28,39 @@ class QuestionController extends Controller
 
     }
 
+      /**
+      *  1. this function is responsible for for recording responses gotten from the user.
+      *  2. it is responsible for redirecting the responses to the route with which it will be stored on the database
+      */
+    
+      private function _registerResponseCommand($voiceResponse, $question)
+      {
+          $storeResponseURL = route(
+              'response.store.voice',
+              ['question' => $question->id,
+               'survey' => $question->survey->id],
+              false
+          );
+  
+          if ($question->kind === 'free-answer') {
+              $voiceResponse->record(
+                  ['method' => 'GET',
+                   'maxLength' => 30,
+                   'action' => $storeResponseURL
+                 ]
+              );
+          } elseif ($question->kind === 'yes-no') {
+              $voiceResponse->gather(['method' => 'POST', 'action' => $storeResponseURL]);
+          } elseif ($question->kind === 'numeric') {
+              $voiceResponse->gather(['method' => 'POST', 'action' => $storeResponseURL]);
+          }
+          return $voiceResponse;
+      }
 
+     /**
+      *  1. this function is responsible for selecting and speaking questions phrases 
+      *   e.g Please record your answer after the beep and then hit the pound sign
+      */
     private function _messageForVoiceQuestion($question)
     {
         $questionPhrases = collect(
@@ -44,43 +71,25 @@ class QuestionController extends Controller
             ]
         );
 
-        return $questionPhrases->get($question->kind, "Please press a number and then the pound sign");
+        return $questionPhrases->get($question->kind);
     }
 
 
-    private function _registerResponseCommand($voiceResponse, $question)
-    {
-        $storeResponseURL = route(
-            'response.store.voice',
-            ['question' => $question->id,
-             'survey' => $question->survey->id],
-            false
-        );
-
-        if ($question->kind === 'free-answer') {
-            $transcribeUrl = route(
-                'response.transcription.store',
-                ['question' => $question->id,
-                 'survey' => $question->survey->id]
-            );
-            $voiceResponse->record(
-                ['method' => 'GET',
-                 'maxLength' => 30,
-                 'action' => $storeResponseURL
-               //  'transcribe' => true,
-               //  'transcribeCallback' => $transcribeUrl
-               ]
-            );
-        } elseif ($question->kind === 'yes-no') {
-            $voiceResponse->gather(['method' => 'POST', 'action' => $storeResponseURL]);
-        } elseif ($question->kind === 'numeric') {
-            $voiceResponse->gather(['method' => 'POST', 'action' => $storeResponseURL]);
-        }
-        return $voiceResponse;
-    }
-
+    /**
+     *  1. when sending responses from one route to another on the IVR, twilio ivr only understand Content-Type: XML response
+    */
     private function _responseWithXmlType($response) {
         return $response->header('Content-Type', 'application/xml');
+    }
+
+
+    /**
+     *  1.this function is responsible for redirecting route the the _commandForVoice function
+    */
+    public function showVoice($surveyId, $questionId)
+    {
+        $questionToAsk = Question::find($questionId);
+        return $this->_responseWithXmlType($this->_commandForVoice($questionToAsk));
     }
 
 }

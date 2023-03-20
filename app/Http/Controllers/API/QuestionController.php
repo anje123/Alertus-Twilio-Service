@@ -7,13 +7,11 @@ use Response;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Question;
-use Twilio\TwiML\VoiceResponse;
-use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
 
 
 
-class QuestionController extends BaseController
+class QuestionController extends Controller
 {
 
     public function getActivatedQuestions()
@@ -33,12 +31,12 @@ class QuestionController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return ['response' => 'Validation Error'. $validator->errors()];      
         }
 
         $question = Question::create($input);
 
-        return $this->sendResponse($question->toArray(), 'Question created successfully.');
+        return response()->json($question, 200);
 
     }
 
@@ -53,7 +51,7 @@ class QuestionController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return ['response' => 'Validation Error.', $validator->errors()];       
         }
         
         $question = Question::find($id);
@@ -61,7 +59,7 @@ class QuestionController extends BaseController
         $question->kind = $request->kind;
         $question->survey_id = $request->survey_id;
         $question->save();
-        return $this->sendResponse($question->toArray(), 'Question updated successfully.');
+        return response()->json($question, 200);
 
     }
 
@@ -69,7 +67,7 @@ class QuestionController extends BaseController
     {
         $question = Question::find($id);
         $question->delete();
-        return $this->sendResponse($question->toArray(), 'Question Deactivated successfully.');
+        return response()->json($question, 200); 
 
         
     }
@@ -78,17 +76,8 @@ class QuestionController extends BaseController
     {
         $question = Question::onlyTrashed()->find($id);
         $question->restore();
-        return $this->sendResponse($question->toArray(), 'Question Activated successfully.');
-
-        
+        return response()->json($question, 200);        
     }
-    
-    public function viewQuestions($surveyId)
-    {
-        return view('questions.questions')->with('questions', Question::where('survey_id',$surveyId)->get());
-
-    }
-
 
     public function getQuestionsBySurveyId($surveyId)
     {
@@ -101,4 +90,5 @@ class QuestionController extends BaseController
         $questions = Question::onlyTrashed()->get();
         return response()->json($questions, 200);
     }
+
 }

@@ -9,10 +9,9 @@ use App\Survey;
 use App\QuestionResponse;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\BaseController as BaseController;
 
 
-class SurveyController extends BaseController
+class SurveyController extends Controller
 {
     public function getSurveys()
     {

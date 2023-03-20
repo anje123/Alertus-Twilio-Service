@@ -8,34 +8,18 @@ use App\Http\Controllers\Controller;
 use App\Question;
 use App\Survey;
 use App\QuestionResponse;
-use App\ResponseTranscription;
 use Twilio\TwiML\VoiceResponse;
-use Cookie;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
-
-
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 
 
 class QuestionResponseController extends Controller
 {
 
-
-    public function __construct()
-    { 
-        $this->path = public_path('audio-contents/');
-        $this->apikey = config('cloudconvert.api_key');
-        $this->bucket_name = env('GOOGLE_CLOUD_STORAGE_BUCKET', 'femmy2');
-    }
-
     /**
-     * Initializes the SpeechClient
-     * @return object \SpeechClient
-     */
-  
-
+     *  1. this function is responsible for storing voice responses on the database
+    */
     public function storeVoice($surveyId, $questionId, Request $request)
     {
         $question = Question::find($questionId);
@@ -43,13 +27,14 @@ class QuestionResponseController extends Controller
             ['response' => $this->_responseFromVoiceRequest($question, $request),
              'phone_no' => $request->Caller,
              'recording_sid' => $request->RecordingSid,
-             'country' => $request->CallerCountry,
-             'storage_completed' => "not_processed",
-             'transcribe_completed' => "not_processed",
+             'storage_completed' => false,
+             'transcribe_completed' => false,
              'type' => 'voice',
+             'country' => $request->FromCountry,
              'session_sid' => $request->input('CallSid')]
        );
 
+       sendResponsesToTranscriptionService($request->all());
         $nextQuestion = $this->_questionAfter($question);
 
         if (is_null($nextQuestion)) {
@@ -61,6 +46,36 @@ class QuestionResponseController extends Controller
         }
     }
 
+     /**
+     * 1.this function is responsible for sending responses to the advanced queueing system (RabbitMQ)
+    */
+    public function sendResponsesToTranscriptionService($data)
+    {
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $channel = $connection->channel();
+
+        //Create the queue
+        $channel->queue_declare('transcribe_queue',   //$queue - Either sets the queue or creates it if not exist
+                                false,          //$passive - Do not modify the servers state
+                                true,           //$durable - Data will persist if crash or restart occurs
+                                false,          //$exclusive - Only one connection will use queue, and deleted when closed
+                                false           //$auto_delete - Queue is deleted when consumer is no longer subscribes
+                            );
+
+
+        //Create the message, set the delivery to be persistant for crashes and restarts
+        $msg = new AMQPMessage(json_encode($data), array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
+        $channel->basic_publish($msg, '', 'transcribe_queue');
+
+        echo "Sent Audio To Server!'\n";
+
+        $channel->close();
+        $connection->close();
+    }
+
+    /**
+     *  1. this function is responsible for selecting responses whether the user used voice response or digits response
+    */
     private function _responseFromVoiceRequest($question, $request)
     {
         if ($question->kind === 'free-answer') {
@@ -70,6 +85,9 @@ class QuestionResponseController extends Controller
         }
     }
 
+    /**
+     *  1. this function is responsible for selecting the next question after each question
+    */
     private function _questionAfter($question)
     {
         $survey = Survey::find($question->survey_id);
@@ -80,6 +98,9 @@ class QuestionResponseController extends Controller
     }
 
 
+    /**
+     *  1. this function is responsible for saying/speaking when the users are done with the survey, basically after the last question
+    */
     private function _voiceMessageAfterLastQuestion()
     {
         $voiceResponse = new VoiceResponse();
@@ -92,7 +113,17 @@ class QuestionResponseController extends Controller
     }
 
 
+    /**
+     *  1. when sending responses from one route to another on the IVR, twilio ivr only understand Content-Type: XML response
+    */
+    private function _responseWithXmlType($response)
+    {
+        return $response->header('Content-Type', 'application/xml');
+    }
 
+    /**
+     *  1.this function is responsible for redirecting route the the _questionAfter function
+    */
     private function _redirectToQuestion($question, $route)
     {
         $questionUrl = route(
@@ -103,24 +134,6 @@ class QuestionResponseController extends Controller
 
         $redirectResponse->redirect($questionUrl, ['method' => 'GET']);
         return Response::make($redirectResponse, '200')->header('Content-Type', 'text/xml');
-
     }
-
-    private function _responseWithXmlType($response)
-    {
-        return $response->header('Content-Type', 'application/xml');
-    }
-
-
-
-    /**
-     * Rename the file to FLAC format
-     * @param  string  $name unique filename
-     * @return striing $name
-     */
-    public static function getFilename($name)
-    {
-        return $name.".flac";
-    } 
 
 }
